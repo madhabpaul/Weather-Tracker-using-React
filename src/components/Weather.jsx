@@ -22,12 +22,12 @@ function Weather() {
             var lon = position.coords.longitude;
             
             const fetchIP = async () => {
-                const urlIP = "http://api.positionstack.com/v1/reverse?access_key=1f63ad10c4556f2df30be77ab4328acd&query="+ lat +","+lon;
+                const urlIP = "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude="+ lat +"&longitude="+ lon +"&localityLanguage=en";
                 const result = await fetch(urlIP);
                 const ipJson = await result.json();
                 console.log(ipJson);
-                setip(ipJson.data[0].locality);
-                setSearch(ipJson.data[0].locality);
+                setip(ipJson);
+                setSearch(ipJson.city);
             };
 
         fetchIP();
@@ -35,7 +35,7 @@ function Weather() {
         }
 
         getLocation();
-    //https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=37.42159&longitude=-122.0837&localityLanguage=en
+    
     
     },[ip] )
     
@@ -69,7 +69,8 @@ function Weather() {
     return (
         <>
             
-            <h2>{ip}</h2>
+            <h2>{ip.city}</h2>
+            <h2>{ip.countryName}</h2>
             
             <div>
            
