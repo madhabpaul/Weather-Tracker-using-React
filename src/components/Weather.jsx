@@ -4,12 +4,13 @@ function Weather() {
 
     
     const [ip, setip] = useState("");
+    const [ipName, setipName] = useState("");
     const [city, setCity] = useState("");
     const [search, setSearch] = useState("");
 
     useEffect(() => {
 
-        // function getLocation() {
+        // function getLocation() {                                          //fetch location using geoloction
         //     if (navigator.geolocation) {
         //         navigator.geolocation.getCurrentPosition(showPosition);
         //     } else {
@@ -26,27 +27,25 @@ function Weather() {
                 const urlIp = "https://api.ipify.org?format=json";
                 const resIp = await fetch(urlIp);
                 const ipJson = await resIp.json();
-                console.log(ipJson.ip);
+                // console.log(ipJson.ip);
                 var ipAddress = ipJson.ip;
             
             
-            const fetchCity = async () => {
-                const urlCity = "https://ipapi.co/"+ ipAddress +"/json/";
-                const result = await fetch(urlCity);
-                const cityJson = await result.json();
-                console.log(cityJson);
-                setip(cityJson);
-                setSearch(cityJson.city);
+                const fetchCity = async () => {
+                    const urlCity = "https://ipapi.co/"+ ipAddress +"/json/";
+                    const result = await fetch(urlCity);
+                    const cityJson = await result.json();
+                    // console.log(cityJson);
+                    setip(cityJson);
+                    setSearch(cityJson.city);
+                };
+                    fetchCity();   
             };
-            fetchCity();   
-        };
-            fetchIp();
+                fetchIp();
                     
         // }
-
         // getLocation();
-    
-            //https://api.bigdatacloud.net/data/reverse-geocode-client?latitude="+ lat +"&longitude="+ lon +"&localityLanguage=en
+
     },[] )
     
     
@@ -57,6 +56,7 @@ function Weather() {
             const response = await fetch(url);
             const dataJson = await response.json();
             console.log(dataJson);
+            setipName(dataJson.location);
             setCity(dataJson.current);
         };
 
@@ -65,39 +65,25 @@ function Weather() {
     },[search] )
 
 
-
-    
-
-
-
-
-    // fetch("https://api.ipify.org?format=json")
-    // .then(result => result.json())
-    // .then(ipData => console.log(ipData.ip));
-    
-
     return (
         <>
            
-            <h2>{ip.city}</h2>
-            <h2>{ip.country_name}</h2>
+            <p><b>Your current location is</b> {ip.city}, {ip.region}, {ip.country_name}. <b>Timezone</b> {ip.timezone}. <b>Your IP Address </b>{ip.ip}</p>
             
             <div>
            
                 <input type="search" onChange={(event) => {
                     setSearch(event.target.value)
-                }}/>
-                
+                }} placeholder="Search City"/>
                 
             </div>
-         {!city ? (
+         {!city || !ipName ? (
              <p>No city found</p>
          ) : (
              
             <div>
-                {/* <h2>{city.name}</h2> */}
-                <h1>{city.temp_c}</h1>
-                <h1>{city.uv}</h1>
+                <h2>{ipName.name}</h2>
+                <p><b>Current Temperature </b>{city.temp_c} Celsius <b>Condition</b> {city.condition.text} <img src={city.condition.icon} alt="icon" /> <b>UV</b> {city.uv}</p>
             </div>
             
             )
