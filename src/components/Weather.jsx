@@ -9,35 +9,45 @@ function Weather() {
 
     useEffect(() => {
 
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                console.log("No location found");
-            }
-        };
+        // function getLocation() {
+        //     if (navigator.geolocation) {
+        //         navigator.geolocation.getCurrentPosition(showPosition);
+        //     } else {
+        //         console.log("No location found");
+        //     }
+        // };
 
-        function showPosition(position) {
-            var lat = position.coords.latitude;
-            var lon = position.coords.longitude;
+        // function showPosition(position) {
+        //     var lat = position.coords.latitude;
+        //     var lon = position.coords.longitude;
+
+
+            const fetchIp = async () => {
+                const urlIp = "https://api.ipify.org?format=json";
+                const resIp = await fetch(urlIp);
+                const ipJson = await resIp.json();
+                console.log(ipJson.ip);
+                var ipAddress = ipJson.ip;
             
-            const fetchIP = async () => {
-                const urlIP = "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude="+ lat +"&longitude="+ lon +"&localityLanguage=en";
-                const result = await fetch(urlIP);
-                const ipJson = await result.json();
-                console.log(ipJson);
-                setip(ipJson);
-                setSearch(ipJson.city);
+            
+            const fetchCity = async () => {
+                const urlCity = "https://ipapi.co/"+ ipAddress +"/json/";
+                const result = await fetch(urlCity);
+                const cityJson = await result.json();
+                console.log(cityJson);
+                setip(cityJson);
+                setSearch(cityJson.city);
             };
+            fetchCity();   
+        };
+            fetchIp();
+                    
+        // }
 
-        fetchIP();
-            
-        }
-
-        getLocation();
+        // getLocation();
     
-    
-    },[ip] )
+            //https://api.bigdatacloud.net/data/reverse-geocode-client?latitude="+ lat +"&longitude="+ lon +"&localityLanguage=en
+    },[] )
     
     
 
@@ -68,9 +78,9 @@ function Weather() {
 
     return (
         <>
-            
+           
             <h2>{ip.city}</h2>
-            <h2>{ip.countryName}</h2>
+            <h2>{ip.country_name}</h2>
             
             <div>
            
